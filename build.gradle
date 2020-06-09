@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+}
+
+group 'org.cucumberwithselenium'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+project.ext {
+    cucumberVersion = '5.6.0'
+}
+
+dependencies {
+    testImplementation 'io.cucumber:cucumber-java:5.6.0'
+    testImplementation 'io.cucumber:cucumber-junit:5.6.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+    implementation 'org.seleniumhq.selenium:selenium-chrome-driver:3.141.59'
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+task cucumber() {
+    dependsOn assemble, compileTestJava
+
+    doFirst {
+        if (project.hasProperty('remoteDebug'))
+            jvmArgs = ['-Xdebug', '-Xrunjdwp:server=y,transport=dt_socket,address=5006,suspend=y']
+    }
+
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'cucumberwithselenium', 'src/test/resources' ]
+//s
+        }
+    }
+}
+
+//tasks.withType(cucumber) {
+//    doFirst {
+//        if (project.hasProperty('remoteDebug'))
+//            jvmArgs = ['-Xdebug', '-Xrunjdwp:server=y,transport=dt_socket,address=5006,suspend=y']
+//    }
+//}
