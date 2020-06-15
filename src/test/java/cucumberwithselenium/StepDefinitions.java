@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import io.cucumber.junit.Cucumber;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -20,7 +21,8 @@ public class StepDefinitions {
 
     @Before
     public void setup() {
-        System.setProperty("webdriver.chrome.driver", "driver/chromedriver");
+//        System.setProperty("webdriver.chrome.driver", "driver/chromedriver");
+        System.setProperty("webdriver.chrome.driver", System.getenv("CHROMEDRIVER_DIR")+"/chromedriver");
         webDriver = new ChromeDriver();
         webDriver.manage().window().maximize();
     }
